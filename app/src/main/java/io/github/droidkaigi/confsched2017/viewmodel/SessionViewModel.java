@@ -15,6 +15,7 @@ import io.github.droidkaigi.confsched2017.R;
 import io.github.droidkaigi.confsched2017.model.Session;
 import io.github.droidkaigi.confsched2017.repository.sessions.MySessionsRepository;
 import io.github.droidkaigi.confsched2017.util.DateUtil;
+import io.github.droidkaigi.confsched2017.util.LocaleUtil;
 import timber.log.Timber;
 
 public class SessionViewModel extends BaseObservable implements ViewModel {
@@ -66,8 +67,10 @@ public class SessionViewModel extends BaseObservable implements ViewModel {
     SessionViewModel(@NonNull Session session, Context context, int roomCount, boolean isMySession,
             MySessionsRepository mySessionsRepository) {
         this.session = session;
-        this.shortStime = DateUtil.getHourMinute(session.stime);
-        this.formattedDate = DateUtil.getMonthDate(session.stime, context);
+
+        Date displaySTime = LocaleUtil.getDisplayDate(session.stime, context);
+        this.shortStime = DateUtil.getHourMinute(displaySTime);
+        this.formattedDate = DateUtil.getMonthDate(displaySTime, context);
         this.title = session.title;
 
         if (session.speaker != null) {

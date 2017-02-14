@@ -1,6 +1,7 @@
 package io.github.droidkaigi.confsched2017;
 
 import com.deploygate.sdk.DeployGate;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.leakcanary.LeakCanary;
 import com.tomoima.debot.DebotConfigurator;
 import com.tomoima.debot.DebotStrategyBuilder;
@@ -57,6 +58,8 @@ public class MainApplication extends Application {
         }
         Timber.plant(new CrashLogTree()); // TODO initialize Firebase before this line
         LocaleUtil.initLocale(this);
+
+        AndroidThreeTen.init(this);
 
         initDebot();
     }

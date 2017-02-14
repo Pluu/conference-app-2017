@@ -1,5 +1,9 @@
 package io.github.droidkaigi.confsched2017.util;
 
+import org.threeten.bp.DateTimeUtils;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZonedDateTime;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -7,9 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -106,16 +107,11 @@ public class LocaleUtil {
     }
 
     public static Date getDisplayDate(@NonNull Date date, Context context) {
-        DateFormat formatTokyo = SimpleDateFormat.getDateTimeInstance();
-        formatTokyo.setTimeZone(CONFERENCE_TIMEZONE);
-        DateFormat formatLocal = SimpleDateFormat.getDateTimeInstance();
-        formatLocal.setTimeZone(getDisplayTimeZone(context));
-        try {
-            return formatLocal.parse(formatTokyo.format(date));
-        } catch (ParseException e) {
-            Timber.tag(TAG).e(e, "date: %s can not parse.", date.toString());
-            return date;
-        }
+        ZonedDateTime localDateTIme = ZonedDateTime
+                .ofInstant(DateTimeUtils.toInstant(date), ZoneId.of(BuildConfig.CONFERENCE_TIMEZONE))
+                .toOffsetDateTime()
+                .atZoneSameInstant(ZoneId.of(getDisplayTimeZone(context).getID()));
+        return DateTimeUtils.toDate(localDateTIme.toInstant());
     }
 
     public static TimeZone getDisplayTimeZone(Context context) {
